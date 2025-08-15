@@ -1,0 +1,358 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url("6a985aaa-8a95-4382-97a9-91cdf96f43d3-Moraine_Lake_Dennis_Frates_Alamy_Stock_Photo.jpg")
+    no-repeat center center/cover;
+  animation: fadeInBody 1.2s ease forwards;
+}
+
+@keyframes fadeInBody {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rainbowBorder {
+  0% {
+    border-color: red;
+  }
+  14% {
+    border-color: orange;
+  }
+  28% {
+    border-color: yellow;
+  }
+  42% {
+    border-color: green;
+  }
+  57% {
+    border-color: blue;
+  }
+  71% {
+    border-color: indigo;
+  }
+  85% {
+    border-color: violet;
+  }
+  100% {
+    border-color: red;
+  }
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 380px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 30px 40px;
+  backdrop-filter: none;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  animation: slideUp 1s ease forwards;
+  transform: translateY(30px);
+  opacity: 0;
+  border: 3px solid;
+  animation: slideUp 1s ease forwards, rainbowBorder 4s linear infinite;
+}
+
+@keyframes slideUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.wrapper h1 {
+  font-size: 2em;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.input-box {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 20px 0;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideIn 0.6s ease forwards;
+}
+
+.input-box:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.input-box:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  outline: none;
+  padding: 0 40px 0 15px;
+  color: #fff;
+  font-size: 1em;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease,
+    backdrop-filter 0.3s ease;
+  border: 3px solid;
+  animation: rainbowBorder 4s linear infinite;
+}
+
+.input-box input::placeholder {
+  color: #fff;
+  opacity: 0.9;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.input-box input:focus {
+  border-color: #fff;
+  box-shadow: 0 0 8px #fff;
+  backdrop-filter: blur(50px);
+}
+
+.input-box i {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+  color: #fff;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.input-box input:focus + i {
+  transform: translateY(-50%) scale(1.2);
+  color: #ffd700;
+}
+
+input.shake {
+  border: 2px solid red !important;
+  box-shadow: 0 0 10px red !important;
+}
+
+.remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+  color: #fff;
+  margin: 10px 0 20px;
+  animation: fadeSlideIn 0.6s ease forwards;
+  animation-delay: 0.6s;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.remember-forgot a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.remember-forgot a:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  color: #333;
+  font-weight: 600;
+  transition: 0.3s ease;
+  border: 3px solid;
+  animation: rainbowBorder 4s linear infinite;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideIn 0.6s ease forwards;
+  animation-delay: 0.8s;
+}
+
+.btn:hover {
+  background: #f1f1f1;
+  transform: translateY(-2px);
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #fff;
+  animation: fadeSlideIn 0.6s ease forwards;
+  animation-delay: 1s;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.register-link a {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+.shake {
+  animation: shake 0.3s ease-in-out;
+  border: 2px solid red !important;
+  box-shadow: 0 0 10px red !important;
+  will-change: transform;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    padding: 20px;
+    background-position: center top;
+  }
+
+  .wrapper {
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .wrapper h1 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+
+  .input-box {
+    height: 45px;
+    margin: 15px 0;
+  }
+
+  .input-box input {
+    font-size: 0.9em;
+    padding: 0 35px 0 12px;
+  }
+
+  .input-box i {
+    font-size: 1em;
+  }
+
+  .btn {
+    height: 40px;
+    font-size: 0.95em;
+  }
+
+  .remember-forgot {
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.8em;
+  }
+
+  .register-link {
+    font-size: 0.8em;
+  }
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .wrapper {
+    max-width: 320px;
+    padding: 25px 30px;
+  }
+
+  .wrapper h1 {
+    font-size: 1.7em;
+  }
+
+  .input-box input {
+    font-size: 0.95em;
+  }
+
+  .btn {
+    font-size: 0.95em;
+  }
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  animation: fadeInModal 0.3s ease;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.2);
+  margin: 15% auto;
+  padding: 30px 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 380px;
+  border: 3px solid;
+  animation: slideUp 0.5s ease forwards, rainbowBorder 4s linear infinite;
+}
+
+.close {
+  color: #fff;
+  float: right;
+  font-size: 1.5em;
+  cursor: pointer;
+}
