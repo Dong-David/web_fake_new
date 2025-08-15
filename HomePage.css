@@ -4,8 +4,7 @@ html {
   padding: 0;
   font-family: Arial, sans-serif;
   height: 100%;
-  background: url("6a985aaa-8a95-4382-97a9-91cdf96f43d3-Moraine_Lake_Dennis_Frates_Alamy_Stock_Photo.jpg")
-    no-repeat center center/cover;
+  background: url("Image.png") no-repeat center center/cover;
   color: #fff;
 }
 
@@ -90,15 +89,14 @@ header {
   color: #fff;
   text-decoration: none;
   border-radius: 10px;
-  border: 3px solid white; 
+  border: 3px solid white;
   transition: 0.3s;
 }
 
-
 .rainbow-btn:hover {
-  background: white; 
+  background: white;
   color: #000;
-  border: 3px solid white; 
+  border: 3px solid white;
 }
 
 .features {
@@ -106,8 +104,7 @@ header {
   justify-content: space-around;
   align-items: stretch;
   padding: 40px 0;
-  background-color: url("6a985aaa-8a95-4382-97a9-91cdf96f43d3-Moraine_Lake_Dennis_Frates_Alamy_Stock_Photo.jpg")
-    no-repeat center center/cover;
+  background-color: url("Image.png") no-repeat center center/cover;
 }
 
 .feature-box {
