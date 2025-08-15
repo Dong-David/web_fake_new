@@ -1,3 +1,6 @@
+/* =======================
+   GLOBAL RESET
+======================= */
 * {
   margin: 0;
   padding: 0;
@@ -5,6 +8,9 @@
   font-family: "Poppins", sans-serif;
 }
 
+/* =======================
+   BODY
+======================= */
 body {
   display: flex;
   justify-content: center;
@@ -26,6 +32,9 @@ body {
   }
 }
 
+/* =======================
+   RAINBOW BORDER ANIMATION
+======================= */
 @keyframes rainbowBorder {
   0% {
     border-color: red;
@@ -53,15 +62,16 @@ body {
   }
 }
 
+/* =======================
+   WRAPPER (LOGIN/REGISTER BOX)
+======================= */
 .wrapper {
   width: 100%;
   max-width: 380px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   padding: 30px 40px;
-  backdrop-filter: none;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-  animation: slideUp 1s ease forwards;
   transform: translateY(30px);
   opacity: 0;
   border: 3px solid;
@@ -75,6 +85,9 @@ body {
   }
 }
 
+/* =======================
+   HEADING
+======================= */
 .wrapper h1 {
   font-size: 2em;
   color: #fff;
@@ -82,6 +95,9 @@ body {
   margin-bottom: 25px;
 }
 
+/* =======================
+   INPUT BOX
+======================= */
 .input-box {
   position: relative;
   width: 100%;
@@ -99,18 +115,11 @@ body {
   animation-delay: 0.4s;
 }
 
-@keyframes fadeSlideIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .input-box input {
   width: 100%;
   height: 100%;
   background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border: 3px solid;
   border-radius: 8px;
   outline: none;
   padding: 0 40px 0 15px;
@@ -120,7 +129,6 @@ body {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   transition: border-color 0.3s ease, box-shadow 0.3s ease,
     backdrop-filter 0.3s ease;
-  border: 3px solid;
   animation: rainbowBorder 4s linear infinite;
 }
 
@@ -152,6 +160,9 @@ body {
   color: #ffd700;
 }
 
+/* =======================
+   REMEMBER / FORGOT LINK
+======================= */
 .remember-forgot {
   display: flex;
   justify-content: space-between;
@@ -173,11 +184,14 @@ body {
   text-decoration: underline;
 }
 
+/* =======================
+   BUTTONS
+======================= */
 .btn {
   width: 100%;
   height: 45px;
   background: #fff;
-  border: none;
+  border: 3px solid;
   outline: none;
   border-radius: 8px;
   cursor: pointer;
@@ -185,12 +199,9 @@ body {
   color: #333;
   font-weight: 600;
   transition: 0.3s ease;
-  border: 3px solid;
-  animation: rainbowBorder 4s linear infinite;
-  opacity: 0;
-  transform: translateY(20px);
   animation: fadeSlideIn 0.6s ease forwards;
   animation-delay: 0.8s;
+  animation: rainbowBorder 4s linear infinite;
 }
 
 .btn:hover {
@@ -198,6 +209,9 @@ body {
   transform: translateY(-2px);
 }
 
+/* =======================
+   REGISTER LINK
+======================= */
 .register-link {
   text-align: center;
   margin-top: 15px;
@@ -220,6 +234,9 @@ body {
   text-decoration: underline;
 }
 
+/* =======================
+   SHAKE ANIMATION
+======================= */
 .shake {
   animation: shake 0.3s ease-in-out;
   border: 2px solid red !important;
@@ -244,6 +261,9 @@ body {
   }
 }
 
+/* =======================
+   MEDIA QUERIES
+======================= */
 @media screen and (max-width: 480px) {
   body {
     padding: 20px;
@@ -261,32 +281,26 @@ body {
     font-size: 1.5em;
     margin-bottom: 20px;
   }
-
   .input-box {
     height: 45px;
     margin: 15px 0;
   }
-
   .input-box input {
     font-size: 0.9em;
     padding: 0 35px 0 12px;
   }
-
   .input-box i {
     font-size: 1em;
   }
-
   .btn {
     height: 40px;
     font-size: 0.95em;
   }
-
   .remember-forgot {
     flex-direction: column;
     gap: 5px;
     font-size: 0.8em;
   }
-
   .register-link {
     font-size: 0.8em;
   }
@@ -297,15 +311,12 @@ body {
     max-width: 320px;
     padding: 25px 30px;
   }
-
   .wrapper h1 {
     font-size: 1.7em;
   }
-
   .input-box input {
     font-size: 0.95em;
   }
-
   .btn {
     font-size: 0.95em;
   }
