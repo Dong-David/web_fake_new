@@ -29,6 +29,13 @@ body {
   }
 }
 
+@keyframes slideUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .wrapper {
   width: 100%;
   max-width: 500px;
@@ -38,35 +45,61 @@ body {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   transform: translateY(30px);
   opacity: 0;
-  border: 3px solid white; 
+  border: 3px solid white;
   animation: slideUp 1s ease forwards;
-}
-
-@keyframes slideUp {
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 
 .wrapper h1 {
   font-size: 2em;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
-.account-info {
-  font-size: 1.1em;
-  margin-top: 10px;
+.sub-title {
+  font-size: 1.4em;
+  margin-bottom: 8px;
 }
 
-.account-actions {
-  margin-top: 30px;
+.description {
+  font-size: 0.95em;
+  color: #eee;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  font-size: 0.95em;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  outline: none;
+  resize: none;
+  margin-bottom: 15px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+textarea:focus {
+  border-color: white;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
 .btn {
-  display: inline-block;
-  padding: 12px 25px;
-  background: #fff;
+  flex: 1;
+  padding: 10px;
+  background: white;
   color: #333;
   font-weight: 600;
   font-size: 1em;
@@ -74,12 +107,24 @@ body {
   text-decoration: none;
   cursor: pointer;
   transition: 0.3s ease;
-  border: 3px solid white;
+  border: 2px solid white;
 }
 
 .btn:hover {
   background: #f1f1f1;
   transform: translateY(-2px);
+}
+
+.logout-btn {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+#result-box {
+  font-size: 0.95em;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 10px;
+  border-radius: 8px;
+  min-height: 40px;
 }
 
 @media screen and (max-width: 480px) {
@@ -91,12 +136,12 @@ body {
     font-size: 1.5em;
   }
 
-  .account-info {
-    font-size: 0.95em;
+  .description {
+    font-size: 0.85em;
   }
 
   .btn {
-    padding: 10px 20px;
+    padding: 10px;
     font-size: 0.95em;
   }
 }
@@ -109,14 +154,5 @@ body {
 
   .wrapper h1 {
     font-size: 1.8em;
-  }
-
-  .account-info {
-    font-size: 1em;
-  }
-
-  .btn {
-    font-size: 0.95em;
-    padding: 11px 22px;
   }
 }
