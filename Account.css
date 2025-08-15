@@ -29,33 +29,6 @@ body {
   }
 }
 
-@keyframes rainbowBorder {
-  0% {
-    border-color: red;
-  }
-  14% {
-    border-color: orange;
-  }
-  28% {
-    border-color: yellow;
-  }
-  42% {
-    border-color: green;
-  }
-  57% {
-    border-color: blue;
-  }
-  71% {
-    border-color: indigo;
-  }
-  85% {
-    border-color: violet;
-  }
-  100% {
-    border-color: red;
-  }
-}
-
 .wrapper {
   width: 100%;
   max-width: 500px;
@@ -65,8 +38,8 @@ body {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   transform: translateY(30px);
   opacity: 0;
-  border: 3px solid;
-  animation: slideUp 1s ease forwards, rainbowBorder 4s linear infinite;
+  border: 3px solid white; 
+  animation: slideUp 1s ease forwards;
 }
 
 @keyframes slideUp {
@@ -101,8 +74,7 @@ body {
   text-decoration: none;
   cursor: pointer;
   transition: 0.3s ease;
-  border: 3px solid;
-  animation: rainbowBorder 4s linear infinite;
+  border: 3px solid white;
 }
 
 .btn:hover {
