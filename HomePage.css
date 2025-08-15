@@ -90,33 +90,15 @@ header {
   color: #fff;
   text-decoration: none;
   border-radius: 10px;
-  border: 3px solid;
-  border-image-slice: 1;
-  border-image-source: linear-gradient(
-    45deg,
-    red,
-    orange,
-    yellow,
-    green,
-    blue,
-    indigo,
-    violet
-  );
+  border: 3px solid white; 
   transition: 0.3s;
 }
 
+
 .rainbow-btn:hover {
-  background: linear-gradient(
-    45deg,
-    red,
-    orange,
-    yellow,
-    green,
-    blue,
-    indigo,
-    violet
-  );
+  background: white; 
   color: #000;
+  border: 3px solid white; 
 }
 
 .features {
