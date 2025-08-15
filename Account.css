@@ -10,8 +10,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url("6a985aaa-8a95-4382-97a9-91cdf96f43d3-Moraine_Lake_Dennis_Frates_Alamy_Stock_Photo.jpg")
-    no-repeat center center/cover;
+  background: url("Image.png") no-repeat center center/cover;
   animation: fadeInBody 1.2s ease forwards;
   color: #fff;
   text-align: center;
