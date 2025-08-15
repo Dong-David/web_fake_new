@@ -2,23 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Account Page</title>
+    <title>Fake News Checker</title>
     <link rel="stylesheet" href="Account.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <div class="wrapper">
-      <h1 id="welcome">Welcome!</h1>
-      <p class="account-info">This is your account page.</p>
+      <h1 id="welcome-text">Welcome, User!</h1>
+      <h2 class="sub-title">Fake News Checker</h2>
+      <p class="description">
+        Enter a news headline or paragraph below and click "Check News" to
+        verify its authenticity.
+      </p>
 
-      <div class="account-actions">
-        <a href="HomePage.html" class="btn">Logout</a>
+      <textarea
+        id="news-input"
+        placeholder="Paste news content here..."
+      ></textarea>
+
+      <div class="button-group">
+        <button class="btn" id="check-btn">Check News</button>
+        <button class="btn logout-btn" id="logout-btn">Logout</button>
       </div>
+
+      <div id="result-box">Result will appear here...</div>
     </div>
 
     <script src="Account.js"></script>
