@@ -1,6 +1,3 @@
-/* =======================
-   BODY & HTML
-======================= */
 body,
 html {
   margin: 0;
@@ -12,9 +9,6 @@ html {
   color: #fff;
 }
 
-/* =======================
-   HEADER / NAVBAR
-======================= */
 header {
   position: fixed;
   width: 100%;
@@ -47,9 +41,6 @@ header {
   padding: 5px 10px;
 }
 
-/* =======================
-   HERO SECTION
-======================= */
 .hero {
   display: flex;
   justify-content: center;
@@ -88,9 +79,6 @@ header {
   margin-bottom: 30px;
 }
 
-/* =======================
-   BUTTONS
-======================= */
 .rainbow-btn {
   display: inline-flex;
   align-items: center;
@@ -131,9 +119,6 @@ header {
   color: #000;
 }
 
-/* =======================
-   FEATURES SECTION
-======================= */
 .features {
   display: flex;
   justify-content: space-around;
@@ -165,18 +150,12 @@ header {
   background: rgba(0, 0, 0, 0.5);
 }
 
-/* =======================
-   FOOTER
-======================= */
 footer {
   text-align: center;
   padding: 20px;
   background: rgba(0, 0, 0, 0.6);
 }
 
-/* =======================
-   ANIMATIONS
-======================= */
 @keyframes fadeInUp {
   0% {
     opacity: 0;
@@ -188,9 +167,6 @@ footer {
   }
 }
 
-/* =======================
-   MEDIA QUERIES
-======================= */
 @media (max-width: 768px) {
   .hero-box h1 {
     font-size: 2em;
