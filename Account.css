@@ -1,3 +1,6 @@
+/* =======================
+   GLOBAL RESET
+======================= */
 * {
   margin: 0;
   padding: 0;
@@ -5,6 +8,9 @@
   font-family: "Poppins", sans-serif;
 }
 
+/* =======================
+   BODY
+======================= */
 body {
   display: flex;
   justify-content: center;
@@ -29,6 +35,9 @@ body {
   }
 }
 
+/* =======================
+   RAINBOW BORDER ANIMATION
+======================= */
 @keyframes rainbowBorder {
   0% {
     border-color: red;
@@ -56,6 +65,9 @@ body {
   }
 }
 
+/* =======================
+   WRAPPER BOX
+======================= */
 .wrapper {
   width: 100%;
   max-width: 500px;
@@ -63,10 +75,10 @@ body {
   border-radius: 12px;
   padding: 40px 30px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-  animation: slideUp 1s ease forwards, rainbowBorder 4s linear infinite;
   transform: translateY(30px);
   opacity: 0;
   border: 3px solid;
+  animation: slideUp 1s ease forwards, rainbowBorder 4s linear infinite;
 }
 
 @keyframes slideUp {
@@ -76,16 +88,25 @@ body {
   }
 }
 
+/* =======================
+   HEADINGS
+======================= */
 .wrapper h1 {
   font-size: 2em;
   margin-bottom: 20px;
 }
 
+/* =======================
+   ACCOUNT INFO TEXT
+======================= */
 .account-info {
   font-size: 1.1em;
   margin-top: 10px;
 }
 
+/* =======================
+   ACCOUNT ACTIONS / BUTTONS
+======================= */
 .account-actions {
   margin-top: 30px;
 }
@@ -110,6 +131,9 @@ body {
   transform: translateY(-2px);
 }
 
+/* =======================
+   MEDIA QUERIES
+======================= */
 @media screen and (max-width: 480px) {
   .wrapper {
     padding: 30px 20px;
