@@ -1,8 +1,9 @@
-const username = localStorage.getItem("username") || "User";
-const welcomeTextEl = document.getElementById("welcome-text");
+const params = new URLSearchParams(window.location.search);
+const username = params.get("user") || "Guest";
 
-if (welcomeTextEl) {
-  welcomeTextEl.textContent = `Welcome, ${username}!`;
+const welcomeEl = document.getElementById("welcome");
+if (welcomeEl) {
+  welcomeEl.textContent = `Welcome, ${username}!`;
 }
 
 const logoutBtn = document.getElementById("logout-btn");
@@ -15,7 +16,7 @@ if (logoutBtn) {
 
 const checkBtn = document.getElementById("check-btn");
 if (checkBtn) {
-  checkBtn.addEventListener("click", () => {
+  checkBtn.addEventListener("click", async () => {
     const input = document.getElementById("news-input").value.trim();
     const resultBox = document.getElementById("result-box");
 
@@ -24,11 +25,21 @@ if (checkBtn) {
       return;
     }
 
-    const random = Math.random();
-    if (random > 0.5) {
-      resultBox.innerHTML = `<p style="color:lightgreen;">This news seems reliable.</p>`;
-    } else {
-      resultBox.innerHTML = `<p style="color:red;">This news might be fake!</p>`;
+    try {
+      const response = await fetch("http://127.0.0.1:5000/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: input }),
+      });
+      const data = await response.json();
+
+      if (data.result && data.result.toLowerCase() === "fake") {
+        resultBox.innerHTML = `<p style="color:red;">This news might be fake!</p>`;
+      } else {
+        resultBox.innerHTML = `<p style="color:lightgreen;">This news seems reliable.</p>`;
+      }
+    } catch (err) {
+      resultBox.innerHTML = `<p style="color:orange;">⚠ Error checking news.</p>`;
     }
   });
 }
