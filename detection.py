@@ -8,31 +8,33 @@ import joblib
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from underthesea import word_tokenize
+import json
 
 app = Flask(__name__)
 CORS(app)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_FILE = os.path.join(BASE_DIR, "models", "rf_model_vi.pkl")
+MODEL_FILE = os.path.join(BASE_DIR, "models", "rf_model_vi.json.pkl")
 VECTORIZER_FILE = os.path.join(BASE_DIR, "models", "tfidf_vectorizer_vi.pkl")
+DATA_FILE = os.path.join(BASE_DIR, "news_dataset.json")
 
 if os.path.exists(MODEL_FILE) and os.path.exists(VECTORIZER_FILE):
     rf = joblib.load(MODEL_FILE)
     vectorizer = joblib.load(VECTORIZER_FILE)
 else:
-    fake_news = pd.read_csv(os.path.join(BASE_DIR, "Fake.csv"), encoding="utf-8")
-    true_news = pd.read_csv(os.path.join(BASE_DIR, "True.csv"), encoding="utf-8")
+    print("Loading JSON dataset...")
+    df = pd.read_json(DATA_FILE, lines=True, encoding="utf-8")  
 
-    fake_news['text'] = fake_news['text'].apply(lambda x: " ".join(word_tokenize(str(x))))
-    true_news['text'] = true_news['text'].apply(lambda x: " ".join(word_tokenize(str(x))))
+    if 'text' not in df.columns or 'label' not in df.columns:
+        raise ValueError("JSON phải có cột 'text' và 'label'")
 
-    fake_news['label'] = 'fake'
-    true_news['label'] = 'true'
+    print("Tokenizing text...")
+    df['text'] = df['text'].apply(lambda x: " ".join(word_tokenize(str(x))))
 
-    data = pd.concat([fake_news, true_news], axis=0).sample(frac=1, random_state=42).reset_index(drop=True)
+    df = df[df['label'].isin(['fake', 'true'])]
 
-    X = data['text']
-    y = data['label']
+    X = df['text']
+    y = df['label']
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
@@ -52,13 +54,20 @@ else:
     )
     X_train_vec = vectorizer.fit_transform(X_train)
 
-    rf = RandomForestClassifier(n_estimators=100, max_depth=30, random_state=42, n_jobs=-1)
+    rf = RandomForestClassifier(
+        n_estimators=100,  
+        max_depth=30,
+        random_state=42,
+        n_jobs=-1
+    )
+    print("Training RandomForest...")
     rf.fit(X_train_vec, y_train)
 
     os.makedirs(os.path.join(BASE_DIR, "models"), exist_ok=True)
     joblib.dump(rf, MODEL_FILE)
     joblib.dump(vectorizer, VECTORIZER_FILE)
 
+    print("Evaluating model on test set...")
     X_test_vec = vectorizer.transform(X_test)
     y_pred = rf.predict(X_test_vec)
 
