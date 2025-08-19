@@ -126,15 +126,6 @@ textarea:focus {
   min-height: 40px;
 }
 
-#metrics-box {
-  font-size: 0.95em;
-  margin-top: 10px;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 10px;
-  border-radius: 8px;
-  min-height: 30px;
-}
-
 @media screen and (max-width: 480px) {
   .wrapper {
     padding: 30px 20px;
