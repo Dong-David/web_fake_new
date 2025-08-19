@@ -34,28 +34,22 @@ if (checkBtn) {
       const data = await response.json();
 
       if (data.result && data.result.toLowerCase() === "fake") {
-        resultBox.innerHTML = `<p style="color:red;">This news might be fake!</p>`;
+        resultBox.innerHTML = `
+          <p style="color:red;">This news might be fake!</p>
+          <p><strong>Confidence:</strong> ${(data.confidence * 100).toFixed(
+            2
+          )}%</p>
+        `;
       } else {
-        resultBox.innerHTML = `<p style="color:lightgreen;">This news seems reliable.</p>`;
+        resultBox.innerHTML = `
+          <p style="color:lightgreen;">This news seems reliable.</p>
+          <p><strong>Confidence:</strong> ${(data.confidence * 100).toFixed(
+            2
+          )}%</p>
+        `;
       }
     } catch (err) {
       resultBox.innerHTML = `<p style="color:orange;">Error checking news.</p>`;
     }
   });
 }
-
-document.addEventListener("DOMContentLoaded", async () => {
-  const metricsBox = document.getElementById("metrics-box");
-  try {
-    const response = await fetch("http://127.0.0.1:5000/metrics");
-    if (!response.ok) throw new Error("metrics not ready");
-    const m = await response.json();
-    const acc = (m.accuracy * 100).toFixed(2);
-
-    metricsBox.innerHTML = `
-      <p><strong>Model Accuracy:</strong> ${acc}%</p>
-    `;
-  } catch (err) {
-    metricsBox.innerHTML = `<p style="color:orange;">Metrics not available.</p>`;
-  }
-});
