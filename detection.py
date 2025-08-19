@@ -1,97 +1,59 @@
-import os, glob, json, gzip
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.ensemble import RandomForestClassifier
-import joblib
-from tqdm import tqdm
+import json, os, random, glob, gzip
 
-try:
-    from underthesea import word_tokenize
-except ImportError:
-    def word_tokenize(x):
-        return str(x).split()
+FAKE_DIR = "Fake"
+REAL_DIR = "Real"
+os.makedirs(FAKE_DIR, exist_ok=True)
 
-app = Flask(__name__)
-CORS(app)
+real_files = glob.glob(os.path.join(REAL_DIR, "*.json.gz"))
+num_real = len(real_files)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = os.path.join(BASE_DIR, "models")
-os.makedirs(MODEL_DIR, exist_ok=True)
+titles = [
+    "Bão mới sắp đổ bộ miền Trung",
+    "Giá xăng tăng kỷ lục, người dân lo lắng",
+    "Thị trường chứng khoán hôm nay biến động mạnh",
+    "Hội thảo khoa học quốc tế tại Hà Nội",
+    "Công nghệ AI thay đổi ngành giáo dục"
+]
+descriptions = [
+    "Tin tức mới cập nhật về sự kiện quan trọng hôm nay.",
+    "Bản tin nhanh về tình hình kinh tế xã hội.",
+    "Sự kiện nóng được nhiều người quan tâm.",
+    "Thông tin chi tiết về dự án nghiên cứu mới.",
+    "Những thay đổi đáng chú ý trong ngành công nghiệp."
+]
+bodies = [
+    "Nhiều người dân đã chuẩn bị đồ dùng cần thiết để đối phó với bão.",
+    "Giá xăng liên tục tăng trong tuần này khiến nhiều người phải tính toán chi tiêu.",
+    "Thị trường chứng khoán hôm nay có nhiều biến động, các nhà đầu tư cần thận trọng.",
+    "Hội thảo thu hút hàng trăm nhà khoa học tham dự, thảo luận về các vấn đề cấp thiết.",
+    "Công nghệ AI đang được áp dụng trong giáo dục, giúp học sinh tiếp cận thông tin hiệu quả."
+]
 
-MODEL_FILE = os.path.join(MODEL_DIR, "rf_model_vi.pkl")
-VECTORIZER_FILE = os.path.join(MODEL_DIR, "tfidf_vectorizer_vi.pkl")
+existing_hashes = set()
+for f in glob.glob(os.path.join(FAKE_DIR, "*.json.gz")):
+    try:
+        with gzip.open(f, "rt", encoding="utf-8") as file:
+            data = json.load(file)
+        existing_hashes.add(hash(data.get("title","")+data.get("text","")))
+    except:
+        continue
 
-def load_json_folder(folder_path, label, min_len=50, max_len=10000):
-    for fp in tqdm(glob.glob(os.path.join(folder_path, "*.json.gz")), desc=f"Loading {label}"):
-        try:
-            with gzip.open(fp, "rt", encoding="utf-8") as f:
-                obj = json.load(f)
-            title = obj.get("title", "")
-            content = obj.get("text", "") or obj.get("description", "")
-            text = f"{title} {content}".strip()
-            if min_len <= len(text) <= max_len:
-                yield {"text": text, "label": label}
-        except Exception as e:
-            continue
-
-if os.path.exists(MODEL_FILE) and os.path.exists(VECTORIZER_FILE):
-    rf = joblib.load(MODEL_FILE)
-    vectorizer = joblib.load(VECTORIZER_FILE)
-else:
-    fake_gen = load_json_folder(os.path.join(BASE_DIR, "Fake"), "fake")
-    real_gen = load_json_folder(os.path.join(BASE_DIR, "Real"), "true")
-
-    data = list(fake_gen) + list(real_gen)
-    if not data:
-        raise RuntimeError("Không tìm thấy dữ liệu Fake hoặc Real")
-
-    print(f"Total articles: {len(data)}")
+i = len(existing_hashes)
+while len(existing_hashes) < num_real:
+    title = random.choice(titles)
+    desc = random.choice(descriptions)
+    body_text = " ".join(random.choices(bodies, k=random.randint(2,3)))
     
-    texts = [" ".join(word_tokenize(d["text"])) for d in tqdm(data, desc="Tokenizing")]
-    labels = [d["label"] for d in data]
+    article_hash = hash(title + body_text)
+    if article_hash in existing_hashes:
+        continue
+    
+    article = {"title": title, "description": desc, "text": body_text, "url": f"fake://article{i}"}
+    file_name = os.path.join(FAKE_DIR, f"fake_{i}.json.gz")
+    with gzip.open(file_name, "wt", encoding="utf-8") as f:
+        json.dump(article, f, ensure_ascii=False, separators=(',',':'))
+    
+    existing_hashes.add(article_hash)
+    i += 1
 
-    vietnamese_stopwords = [
-        "và","của","là","có","trên","cho","một","những","được","khi","này","với","để","ra","tại",
-        "theo","vì","như","cũng","từ","sẽ","họ","nên","các","tôi","anh","chị","ông","bà","đã","đang","trong"
-    ]
-
-    vectorizer = TfidfVectorizer(
-        max_features=5000,
-        stop_words=vietnamese_stopwords,
-        ngram_range=(1,2),
-        min_df=5,
-        max_df=0.8
-    )
-    X = vectorizer.fit_transform(texts)
-
-    rf = RandomForestClassifier(
-        n_estimators=50,
-        max_depth=30,
-        random_state=42,
-        class_weight="balanced",
-        n_jobs=-1
-    )
-    rf.fit(X, labels)
-
-    joblib.dump(rf, MODEL_FILE, compress=3)
-    joblib.dump(vectorizer, VECTORIZER_FILE, compress=3)
-    print("Model và vectorizer đã được lưu.")
-
-def predict_news(text):
-    text_vec = vectorizer.transform([" ".join(word_tokenize(text))])
-    probs = rf.predict_proba(text_vec)[0]
-    idx = probs.argmax()
-    return rf.classes_[idx], float(probs[idx])
-
-@app.route("/check", methods=["POST"])
-def check_news():
-    data = request.get_json() or {}
-    text = (data.get("text") or "").strip()
-    if not text:
-        return jsonify({"error": "No text provided"}), 400
-    label, confidence = predict_news(text)
-    return jsonify({"result": label, "confidence": round(confidence, 4)})
-
-if __name__ == "__main__":
-    app.run(debug=True)
+print(f"Created {len(existing_hashes)} fake articles, balanced with real ones.")
