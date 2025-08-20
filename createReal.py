@@ -4,14 +4,16 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from urllib.robotparser import RobotFileParser
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from tqdm import tqdm
 
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 SAVE_DIR = "Real"
 os.makedirs(SAVE_DIR, exist_ok=True)
 
-MAX_MB = 400            
+TARGET_FILES = 2000      
 MAX_WORKERS = 8
-RETRY = 3               
+RETRY = 3
+DELAY = 0.5             
 
 SOURCES = [
     {"name":"vnexpress","base_url":"https://vnexpress.net","category":"thoi-su",
@@ -32,24 +34,33 @@ SOURCES = [
     {"name":"bo_congthuong","base_url":"https://www.moit.gov.vn","category":"thoi-su",
      "link_selector":"h3.title a[href]","title_selector":"h1.title-detail",
      "body_selector":"div.content-detail p"},
+    {"name":"tuoitre","base_url":"https://tuoitre.vn","category":"thoi-su",
+     "link_selector":"h3.t3-article__title a[href]","title_selector":"h1.t3-detail__title",
+     "body_selector":"div.t3-content p"},
+    {"name":"thanhnien","base_url":"https://thanhnien.vn","category":"thoi-su",
+     "link_selector":"h2.article-title a[href]","title_selector":"h1.article-title",
+     "body_selector":"div.article-body p"},
+    {"name":"vtv","base_url":"https://vtv.vn","category":"thoi-su",
+     "link_selector":"h3.title a[href]","title_selector":"h1.title-detail",
+     "body_selector":"div.article-content p"},
+    {"name":"dantri","base_url":"https://dantri.com.vn","category":"thoi-su",
+     "link_selector":"h3.news-item__title a[href]","title_selector":"h1.article-title",
+     "body_selector":"div.fck_detail p"},
 ]
 
 robots_parsers = {}
 for src in SOURCES:
     rp = RobotFileParser()
     rp.set_url(urljoin(src["base_url"], "/robots.txt"))
-    rp.read()
+    try:
+        rp.read()
+    except:
+        pass
     robots_parsers[src["name"]] = rp
 
 def is_allowed(url, source_name):
     rp = robots_parsers.get(source_name)
     return rp.can_fetch(HEADERS["User-Agent"], url) if rp else True
-
-def current_dir_mb():
-    total = 0
-    for f in glob.glob(os.path.join(SAVE_DIR, "*")):
-        total += os.path.getsize(f)
-    return total / (1024*1024)
 
 existing_files = glob.glob(os.path.join(SAVE_DIR, "*.json.gz"))
 existing_hashes = set()
@@ -57,7 +68,8 @@ for f in existing_files:
     try:
         with gzip.open(f, "rt", encoding="utf-8") as file:
             data = json.load(file)
-            existing_hashes.add(hash(data.get("title","")+data.get("text","")))
+            h = hashlib.md5((data.get("title","")+data.get("text","")).encode('utf-8')).hexdigest()
+            existing_hashes.add(h)
     except:
         continue
 
@@ -68,7 +80,7 @@ def get_html(url):
             if r.status_code == 200:
                 return r.text
         except:
-            time.sleep(1)
+            time.sleep(DELAY)
     return None
 
 def get_article_links(base_url, page_url, link_selector):
@@ -95,7 +107,7 @@ def save_article(url, title_selector, body_selector, source_name):
     body = " ".join([p.get_text(strip=True) for p in soup.select(body_selector)])
     if len(body) < 50:
         return None
-    article_hash = hash(title + body)
+    article_hash = hashlib.md5((title + body).encode('utf-8')).hexdigest()
     if article_hash in existing_hashes:
         return None
     article = {"title": title, "text": body, "url": url, "source": source_name}
@@ -114,11 +126,10 @@ def crawl_source(src):
 
     for year in range(2010, 2026):
         for month in range(1, 13):
+            if len(existing_hashes) >= TARGET_FILES:
+                return
             page = 1
             while True:
-                if current_dir_mb() >= MAX_MB:
-                    print(f"Reached {MAX_MB} MB. Stopping crawl.")
-                    return
                 page_url = f"{base_url}/{category}-p{page}"
                 links = get_article_links(base_url, page_url, link_selector)
                 if not links:
@@ -126,12 +137,13 @@ def crawl_source(src):
                 with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
                     futures = [executor.submit(save_article, link, title_selector, body_selector, src["name"]) for link in links]
                     for fut in as_completed(futures):
-                        if current_dir_mb() >= MAX_MB:
-                            print(f"Reached {MAX_MB} MB. Stopping crawl.")
+                        if len(existing_hashes) >= TARGET_FILES:
+                            print(f"Reached {TARGET_FILES} articles. Stopping crawl.")
                             return
+                time.sleep(DELAY)
                 page += 1
 
 for src in SOURCES:
     crawl_source(src)
 
-print(f"Done. Total articles: {len(existing_hashes)}, Size: {current_dir_mb():.2f} MB")
+print(f"Done. Total articles: {len(existing_hashes)}")
