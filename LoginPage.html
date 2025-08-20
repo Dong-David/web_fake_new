@@ -13,7 +13,7 @@
   </head>
   <body>
     <div class="wrapper">
-      <form action="">
+      <form id="loginForm">
         <h1>Login</h1>
         <div class="input-box">
           <input id="username" type="text" placeholder="Username" required />
@@ -22,7 +22,7 @@
         <div class="input-box">
           <input
             id="password"
-            type="Password"
+            type="password"
             placeholder="Password"
             required
           />
@@ -30,16 +30,17 @@
         </div>
 
         <div class="remember-forgot">
-          <label><input type="checkbox" />Remember Me</label>
-          <a href="#">Forgot password?</a>
+          <label><input type="checkbox" /> Remember Me</label>
+          <a href="#" id="forgotBtn">Forgot password?</a>
         </div>
 
         <button type="submit" class="btn">Login</button>
 
         <div class="register-link">
-          <p>Don't have an account?<a href="RegisterPage.html">Register</a></p>
+          <p>Don't have an account? <a href="RegisterPage.html">Register</a></p>
         </div>
       </form>
+
       <div id="forgotModal" class="modal">
         <div class="modal-content">
           <span class="close">&times;</span>
@@ -58,8 +59,8 @@
           </form>
         </div>
       </div>
-
-      <script src="LoginPage.js"></script>
     </div>
+
+    <script src="LoginPage.js"></script>
   </body>
 </html>
