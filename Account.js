@@ -1,55 +1,77 @@
-const params = new URLSearchParams(window.location.search);
-const username = params.get("user") || "Guest";
+document.addEventListener("DOMContentLoaded", () => {
+  const checkBtn = document.getElementById("check-btn");
+  const logoutBtn = document.getElementById("logout-btn");
+  const newsInput = document.getElementById("news-input");
+  const resultBox = document.getElementById("result-box");
+  const metricsBox = document.getElementById("metrics-box");
 
-const welcomeEl = document.getElementById("welcome");
-if (welcomeEl) {
-  welcomeEl.textContent = `Welcome, ${username}!`;
-}
+  const params = new URLSearchParams(window.location.search);
+  const username = params.get("user") || "Guest";
 
-const logoutBtn = document.getElementById("logout-btn");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("username");
-    window.location.href = "HomePage.html";
-  });
-}
+  const welcomeEl = document.getElementById("welcome");
+  if (welcomeEl) {
+    welcomeEl.textContent = `Welcome, ${username}!`;
+  }
 
-const checkBtn = document.getElementById("check-btn");
-if (checkBtn) {
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      alert("Logging out...");
+      localStorage.removeItem("username");
+      window.location.href = "HomePage.html";
+    });
+  }
+
   checkBtn.addEventListener("click", async () => {
-    const input = document.getElementById("news-input").value.trim();
-    const resultBox = document.getElementById("result-box");
-
-    if (!input) {
-      resultBox.innerHTML = `<p style="color:yellow;">⚠ Please enter news content to check!</p>`;
+    const text = newsInput.value.trim();
+    if (!text) {
+      resultBox.textContent = "Please enter some news content.";
       return;
     }
 
+    resultBox.textContent = "Checking...";
+    metricsBox.innerHTML = "";
+
     try {
-      const response = await fetch("http://127.0.0.1:5000/check", {
+      const response = await fetch("http://127.0.0.1:5000/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: input }),
+        body: JSON.stringify({ text }),
       });
+
       const data = await response.json();
 
-      if (data.result && data.result.toLowerCase() === "fake") {
-        resultBox.innerHTML = `
-          <p style="color:red;">This news might be fake!</p>
-          <p><strong>Confidence:</strong> ${(data.confidence * 100).toFixed(
-            2
-          )}%</p>
+      const label = data.prediction === "FAKE" ? "Fake News" : "Real News";
+      const conf = (data.confidence * 100).toFixed(2);
+
+      resultBox.innerHTML = `<strong>${label}</strong><br>Confidence: ${conf}%`;
+
+      if (data.metrics) {
+        const { accuracy, precision, recall, f1, confusion_matrix } =
+          data.metrics;
+
+        let html = `
+          <h3>Model Evaluation Metrics</h3>
+          <p>Accuracy: ${(accuracy * 100).toFixed(2)}%</p>
+          <p>Precision: ${(precision * 100).toFixed(2)}%</p>
+          <p>Recall: ${(recall * 100).toFixed(2)}%</p>
+          <p>F1 Score: ${(f1 * 100).toFixed(2)}%</p>
+          <h4>Confusion Matrix</h4>
+          <table>
+            <tr><th></th><th>Pred Real</th><th>Pred Fake</th></tr>
+            <tr><th>Actual Real</th><td>${confusion_matrix[0][0]}</td><td>${
+          confusion_matrix[0][1]
+        }</td></tr>
+            <tr><th>Actual Fake</th><td>${confusion_matrix[1][0]}</td><td>${
+          confusion_matrix[1][1]
+        }</td></tr>
+          </table>
         `;
-      } else {
-        resultBox.innerHTML = `
-          <p style="color:lightgreen;">This news seems reliable.</p>
-          <p><strong>Confidence:</strong> ${(data.confidence * 100).toFixed(
-            2
-          )}%</p>
-        `;
+        metricsBox.innerHTML = html;
       }
     } catch (err) {
-      resultBox.innerHTML = `<p style="color:orange;">Error checking news.</p>`;
+      resultBox.textContent =
+        "Error: Unable to check news. Please try again later.";
+      console.error("Backend error:", err);
     }
   });
-}
+});
