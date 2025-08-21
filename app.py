@@ -6,8 +6,8 @@ app = Flask(__name__)
 CORS(app)
 
 MODEL_DIR = "models"
-model = joblib.load(os.path.join(MODEL_DIR, "model.pkl"))
-vectorizer = joblib.load(os.path.join(MODEL_DIR, "vectorizer.pkl"))
+model = joblib.load(os.path.join(MODEL_DIR, "rf_model_vi.pkl"))
+vectorizer = joblib.load(os.path.join(MODEL_DIR, "tfidf_vectorizer_vi.pkl"))
 
 @app.route("/check", methods=["POST"])
 def check_text():
@@ -37,11 +37,11 @@ def check_text():
 @app.route("/metrics", methods=["GET"])
 def get_metrics():
     try:
-        with open(os.path.join(MODEL_DIR, "metrics.json"), "r") as f:
+        with open(os.path.join(MODEL_DIR, "metrics_vi.json"), "r") as f:
             metrics = json.load(f)
         return jsonify(metrics)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="127.0.0.1", port=5000, debug=True)
