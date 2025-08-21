@@ -38,10 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!response.ok) throw new Error("Check API failed");
       const data = await response.json();
 
-      const label = data.result === "fake" ? "Fake News" : "Real News";
+      const fakeReal = data.fake_real === "fake" ? "Fake News" : "Real News";
+      const subject = data.subject ? ` (${data.subject})` : "";
       const conf = (data.confidence * 100).toFixed(2);
 
-      resultBox.innerHTML = `<strong>${label}</strong><br>Confidence: ${conf}%`;
+      resultBox.innerHTML = `<strong>${fakeReal}${subject}</strong><br>Confidence: ${conf}%`;
 
       const metricsResp = await fetch("http://127.0.0.1:5000/metrics");
       if (!metricsResp.ok) throw new Error("Metrics API failed");
