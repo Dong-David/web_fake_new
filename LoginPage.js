@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         username.focus();
       }, 300);
     } else {
+      alert("Logging in...");
       window.location.href = `account.html?user=${encodeURIComponent(
         validUser.username
       )}`;
