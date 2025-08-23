@@ -4,6 +4,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
+from deep_translator import GoogleTranslator
+from langdetect import detect
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(BASE_DIR, "models")
@@ -12,6 +14,15 @@ os.makedirs(MODEL_DIR, exist_ok=True)
 MODEL_FILE = os.path.join(MODEL_DIR, "rf_model_vi.pkl")
 VECTORIZER_FILE = os.path.join(MODEL_DIR, "tfidf_vectorizer_vi.pkl")
 EVAL_FILE = os.path.join(MODEL_DIR, "metrics_vi.json")
+
+def translate_to_vietnamese(text):
+    try:
+        lang = detect(text)
+        if lang != 'vi':
+            text = GoogleTranslator(source='auto', target='vi').translate(text)
+    except:
+        pass
+    return text
 
 def load_data_from_folder(folder, label):
     texts, labels = [], []
@@ -24,6 +35,7 @@ def load_data_from_folder(folder, label):
                     article.get("text", article.get("description", ""))).strip()
 
             if text:
+                text = translate_to_vietnamese(text)
                 texts.append(text)
                 labels.append(label)
 
