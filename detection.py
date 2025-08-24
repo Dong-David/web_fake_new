@@ -84,12 +84,12 @@ if __name__ == "__main__":
     )
 
     # 4. Fit TF-IDF trên train, transform cả train/test
-    vectorizer = TfidfVectorizer(max_features=5000)
+    vectorizer = TfidfVectorizer(max_features=10000)
     X_train = vectorizer.fit_transform(X_train_texts)
     X_test = vectorizer.transform(X_test_texts)
 
     # 5. Train model
-    rf = RandomForestClassifier(n_estimators=200, random_state=42)
+    rf = RandomForestClassifier(n_estimators=500, random_state=42)
     rf.fit(X_train, y_train)
 
     # 6. Đánh giá
